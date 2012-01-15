@@ -1,0 +1,31 @@
+LibFloorplan
+
+learning from large floorplan datasets
+
+WORKS:
+- Loading and saving graphs from XML, boost::serialization
+- Area and degree distributions can be generated & saved to file
+
+TODO:
+- Regarding graph structure:
+- Clustering coefficient (this is a value that indicates how "star
+shaped" the neighbors of a label is)
+- Average path length (average number of edges needed to travel to
+this vertex from all other vertices)
+- DONE Average degree (number of edges that a node has) for various orders
+(immediate neighbors, neighbors of neighbors etc.)
+
+Regarding geometric properties, the polygon layout of a room:
+- DONE Area
+- Shape (simply square or elongated)
+- Perimeter length
+- Number of vertices of the room's layout (i.e. how "zigzaggy" the perimeter
+  is)
+- Convexity measure of the room's layout (ratio of polygon's area to
+it's convex hull)
+- Average vertex angle of the room's layout
+- Door width
+
+Regarding other structure:
+- Number of windows (only available in the KTH dataset)
+

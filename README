@@ -2,6 +2,9 @@ LibFloorplan
 
 learning from large floorplan datasets
 
+INSTALLATION
+You will need Boost Graph Library > 1.42 or equivalent
+
 WORKS:
 - Loading and saving graphs from XML, boost::serialization
 - Area and degree distributions can be generated & saved to file

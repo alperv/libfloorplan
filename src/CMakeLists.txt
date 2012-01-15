@@ -1,0 +1,6 @@
+
+ADD_EXECUTABLE(APITest main.cpp)
+
+
+TARGET_LINK_LIBRARIES(APITest libfloorplan)
+install(TARGETS APITest DESTINATION ${OUTPUT})

@@ -285,6 +285,27 @@ void saveGraphToXML(std::string filenamePath, const floorplanGraph& Graph){
 }
 
 /**
+  * Write a graph to file with Matlab-friendly format
+  */
+
+void saveGraphToMatlab(std::string filenamePath, const floorplanGraph& Graph) {
+
+    std::ofstream out((filenamePath).c_str());
+
+    BGL_FORALL_EDGES(e, Graph, floorplanGraph){
+      string sourcestr = formatStringForDot(Graph[source(e, Graph)].vertex_id);
+      int sourceid = source(e, Graph);
+      string targetstr = formatStringForDot(Graph[target(e, Graph)].vertex_id);
+      int targetid = target(e, Graph);
+      out << sourceid << " " <<  targetid << std::endl;
+    }
+
+    out.close();
+
+}
+
+
+/**
   * Write a graph to file with Dot format
   */
 

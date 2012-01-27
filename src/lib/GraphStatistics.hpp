@@ -42,10 +42,18 @@ private:
   */
     DistVectorByLabel _areaDistByLabel;
 
-
-
     std::vector<std::string> _labels;
 
+   static inline double polygonArea(double *X, double *Y, int points) {
+
+      double  area=0. ;
+      int     i, j=points-1  ;
+
+      for (i=0; i<points; i++) {
+        area+=(X[j]+X[i])*(Y[j]-Y[i]); j=i; }
+
+      return area*.5;
+    }
 public:
     GraphStatistics();
     GraphStatistics(GraphDatabase* database);
@@ -53,6 +61,19 @@ public:
     void generateDegreeDist();
     void generateClusterCoeffDist();
     void generateAreaDist();
+
+    /**
+      * Area of a space
+      */
+    double getArea(const Space& r);
+
+
+
+    /**
+      * Number of connections of a space
+      */
+    int getDegree(Vertex v, const floorplanGraph& G);
+
 
     /**
       * Number of Graphs in the whole database

@@ -43,6 +43,10 @@ public:
     const std::vector<graphProperties>& getGraphProperty(){ return _graphProperties; }
 
 
+    /**
+      * Remove those categories that occur less than @freqThreshold times in the database
+      *
+      */
 
     void removeCategoriesBasedonFrequency(int freqThreshold);
 

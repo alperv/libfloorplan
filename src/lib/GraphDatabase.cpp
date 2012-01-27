@@ -5,7 +5,7 @@
 
 #include "GraphDatabase.hpp"
 #include "GraphFileOperations.hpp"
-
+#include "GraphUtils.hpp"
 
 #include <boost/serialization/list.hpp>
 #include <boost/serialization/vector.hpp>
@@ -14,7 +14,7 @@
 #include <boost/graph/adj_list_serialize.hpp>
 
 using namespace std;
-
+namespace floorplan {
 
 //----------------------------------------------------------------
 GraphDatabase::GraphDatabase()
@@ -26,7 +26,7 @@ GraphDatabase::GraphDatabase()
 void GraphDatabase::loadGraphs(string sDir, string rootNodeName, int iLimit, bool append){
     if (append)
         _graphs = vector<floorplanGraph>();
-    _graphProperties = loadAllGraphsInFolder(sDir, _graphs, iLimit, rootNodeName);
+    _graphProperties = GraphFileOperations::loadAllGraphsInFolder(sDir, _graphs, iLimit, rootNodeName);
 }
 
 
@@ -62,4 +62,72 @@ void GraphDatabase::Load(string sFilename)
     ifs.close();
 }
 
+//----------------------------------------------------------------
+int GraphDatabase::replaceCategory(std::string oldCategory, std::string newCategory){
+    int nodesAffected = 0;
+    for (unsigned int i=0; i < _graphs.size(); i++){
+        BGL_FORALL_VERTICES(v, _graphs[i], floorplanGraph){
+            if (_graphs[i][v].category.compare(oldCategory) == 0){
+                _graphs[i][v].category = newCategory;
+                nodesAffected++;
+            }
+        }
+    }
+    return nodesAffected;
+}
 
+//----------------------------------------------------------------
+int  GraphDatabase::mergeCentralNodes(int degreeThreshold, std::string newCategory){
+    int nodesAffected = 0;
+    for (unsigned int i=0; i < _graphs.size(); i++){
+        BGL_FORALL_VERTICES(v, _graphs[i], floorplanGraph){
+            if (in_degree(v, _graphs[i]) >= degreeThreshold){
+                _graphs[i][v].category = newCategory;
+                nodesAffected++;
+            }
+        }
+    }
+    return nodesAffected;
+}
+
+void GraphDatabase::removeCategoriesBasedonFrequency(int freqThreshold){
+    map<string, int> categoryCount;
+    vector<string> labels;
+
+    /* Fill up the labels and categoryCount container */
+    for (unsigned int i = 0; i < _graphs.size(); i++){
+        BGL_FORALL_VERTICES(v, _graphs[i], floorplanGraph){
+            vector<string>::iterator it = find(labels.begin(), labels.end(), _graphs[i][v].category);
+            if (it == labels.end()){
+                  labels.push_back(_graphs[i][v].category);
+                  categoryCount[_graphs[i][v].category] = 0;
+            }
+        }
+    }
+
+    // count all the categories in the database
+    for (unsigned int i=0; i < _graphs.size(); i++){
+        BGL_FORALL_VERTICES(v, _graphs[i], floorplanGraph){
+                categoryCount[_graphs[i][v].category]++;
+            }
+        }
+    // Determine categories to remove
+    vector<string> categoriesToRemove;
+    map<string, int>::iterator it;
+    for (it = categoryCount.begin(); it != categoryCount.end(); ++it){
+        if (it->second < freqThreshold)
+            categoriesToRemove.push_back(it->first);
+    }
+
+    // Remove those categories from each graph in the database
+    for (unsigned int i =0; i < categoriesToRemove.size(); i++){
+        cout << "Removing category " << categoriesToRemove[i] << endl;
+        for (unsigned int j = 0; j < _graphs.size(); j++){
+            floorplanGraph tmpGraph = _graphs[j];
+            GraphUtils::removeCategory(categoriesToRemove[i],tmpGraph, _graphs[j]);
+        }
+    }
+
+}
+
+}

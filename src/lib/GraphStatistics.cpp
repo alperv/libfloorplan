@@ -9,6 +9,7 @@
 using namespace std;
 using namespace boost;
 
+namespace floorplan {
 GraphStatistics::GraphStatistics()
 {
 
@@ -38,7 +39,7 @@ int GraphStatistics::getNumberOfVertices(){
     int ret = 0;
     for (unsigned int i = 0; i < _database->getGraphs().size(); i++){
         BGL_FORALL_VERTICES(v, _database->getGraphs()[i], floorplanGraph){
-            cout << _database->getGraphs()[i][v].vertex_id << endl;
+            //cout << _database->getGraphs()[i][v].vertex_id << endl;
             ret++;
         }
     }
@@ -66,7 +67,7 @@ void GraphStatistics::generateDegreeDist(){
         floorplanGraph G = _database->getGraphs()[i];
         BGL_FORALL_VERTICES(v, G, floorplanGraph){
             int degree = in_degree(v, G);
-            cout << G[v].category << " degree: " << degree << endl;
+           // cout << G[v].category << " degree: " << degree << endl;
             if (degree < 100)
                 _degreeDistByLabel[G[v].category][degree]++;
         }
@@ -139,8 +140,6 @@ int GraphStatistics::getDegree(Vertex v, const floorplanGraph& G){
     return in_degree(v, G);
 }
 
-
-
 // ---------------------------------------------------------------------
 void GraphStatistics::saveDistToFile(string filename, DistVectorByLabel dist){
     std::ofstream out(filename.c_str() );
@@ -154,4 +153,6 @@ void GraphStatistics::saveDistToFile(string filename, DistVectorByLabel dist){
         out << endl;
     }
     out.close();
+}
+
 }

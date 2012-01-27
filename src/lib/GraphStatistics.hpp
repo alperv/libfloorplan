@@ -14,6 +14,7 @@
 
 typedef std::map< std::string, std::vector<double> > DistVectorByLabel;
 
+namespace floorplan {
 class GraphStatistics
 {
 private:
@@ -62,6 +63,7 @@ public:
     void generateClusterCoeffDist();
     void generateAreaDist();
 
+
     /**
       * Area of a space
       */
@@ -90,11 +92,14 @@ public:
       */
     int getNumberOfEdges();
 
+    int getNumberofCategories() {return _labels.size();}
+
     const DistVectorByLabel& getDegreeDist() { return _degreeDistByLabel;}
     const DistVectorByLabel& getAreaDist(){ return _areaDistByLabel;}
 
 
 
 };
+}
 
 #endif // GRAPHSTATISTICS_H

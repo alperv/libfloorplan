@@ -9,13 +9,14 @@
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
 
+
 #include <fstream>
 
 #ifndef GRAPHDATABASE_HPP
 #define GRAPHDATABASE_HPP
 
-class GraphStatistics;
 
+namespace floorplan {
 class GraphDatabase
 {
 private:
@@ -29,6 +30,7 @@ private:
       * Graph properties
       */
     std::vector<graphProperties> _graphProperties;
+
 public:
     GraphDatabase();
 
@@ -39,6 +41,29 @@ public:
 
     const std::vector<floorplanGraph>& getGraphs(){ return _graphs; }
     const std::vector<graphProperties>& getGraphProperty(){ return _graphProperties; }
+
+
+
+    void removeCategoriesBasedonFrequency(int freqThreshold);
+
+    /**
+      *  Swap a category with another category label, typically this is done
+      * if two category labels indicate semantically the same type of space but have
+      * different labels for one reason or another (e.g. swap male bathroom to simply bathroom)
+      * @return: number of spaces affected by this.
+      */
+   int replaceCategory(std::string oldCategory, std::string newCategory);
+
+
+   /**
+     * Loop through all the spaces in the database and if the number of their neighbors
+     * is greater or equal than @degreeThreshold, then set its category to newCategory.
+     * This is useful when say, a corridor-like place is called many names, a "circulation area"
+     * a "hallway" etc. but in terms of observable features they appear the same.
+     * @return: number of spaces affected by this.
+     */
+   int mergeCentralNodes(int degreeThreshold, std::string newCategory);
+
 
     /**
      * Serializes the class to a specified Archive.
@@ -60,6 +85,6 @@ public:
 
 };
 
-
+}
 
 #endif // GRAPHDATABASE_HPP

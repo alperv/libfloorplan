@@ -289,7 +289,7 @@ public:
     /**
   * Write a graph to file with Matlab-friendly format
   */
-    void saveGraphToMatlab(std::string filenamePath, const floorplanGraph& Graph) {
+    static void saveGraphToMatlab(std::string filenamePath, const floorplanGraph& Graph) {
 
         std::ofstream out((filenamePath).c_str());
 

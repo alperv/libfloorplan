@@ -84,13 +84,13 @@ public:
         read_xml(filenamePath, XMLtree);
         map<string, Vertex> nameToVertex;
         graphProperties currentGraphProperty;
-        currentGraphProperty.filePath = filenamePath;
+        currentGraphProperty.filepath = filenamePath;
 
         size_t foundDot = filenamePath.find_last_of('/');
         if (foundDot != string::npos)
-            currentGraphProperty.floorName = filenamePath.substr(foundDot+1, filenamePath.size()-1);
+            currentGraphProperty.floorname = filenamePath.substr(foundDot+1, filenamePath.size()-1);
         else
-            currentGraphProperty.floorName = filenamePath;
+            currentGraphProperty.floorname = filenamePath;
 
         BOOST_FOREACH(ptree::value_type &v, XMLtree.get_child(rootNodeName.c_str()))
         {
@@ -239,9 +239,9 @@ public:
         // Load all the files (except current directory(.) and previous dir(..))
         while ((dirp = readdir(dp)) != NULL )
         {
-            //cout << dirp->d_name << endl;
+           // cout << dirp->d_name << endl;
             string str(dirp->d_name);
-            if( strlen(dirp->d_name) != 0 && dirp->d_name[0] != '.' && str.compare(str.length() - 4, 4, ".xml") == 0)
+            if( strlen(dirp->d_name) != 0 && dirp->d_name[0] != '.')
             {
                 fLoad << sDir << "/" << dirp->d_name;
 
@@ -249,7 +249,7 @@ public:
                 stat(fLoad.str().c_str(), &statTmp);
 
                 // Check if it is a file or directory
-                if( !S_ISDIR(statTmp.st_mode) )
+                if( !S_ISDIR(statTmp.st_mode) && fLoad.str().find(".xml") != string::npos)
                 {
                     cout << "Loading file " << fLoad.str() << endl;
                     floorplanGraph Graph;
@@ -260,12 +260,12 @@ public:
                 }
                 else
                 {
-                    if(dirp->d_name[0] == '.'){
+                    if(S_ISDIR(statTmp.st_mode)){
                         cout << "Loading directory " << fLoad.str() << endl;
-                        vector<graphProperties> tmp = loadAllGraphsInFolder(string(fLoad.str()), vResult, iLimit);
+                        vector<graphProperties> tmp = loadAllGraphsInFolder(string(fLoad.str()), vResult, iLimit, rootNodeName);
                         retGraphProperties.insert(retGraphProperties.end(),tmp.begin(),tmp.end());
-                        fLoad.str("");
                     }
+                    fLoad.str("");
                 }
             }
             if( iLimit != -1 && iCounter >= iLimit )
@@ -329,6 +329,38 @@ public:
         out.close();
 
     }
+
+  /**
+* Write a graph to file with Dot format
+*/
+static  void saveGraphToDot(std::string filenamePath, const simpleGraph& Graph){
+
+      std::ofstream out((filenamePath).c_str());
+      out << "graph TopoGraph {" << endl;
+      out << "overlap=false; splines=true;" << endl;
+      BGL_FORALL_VERTICES(v, Graph, simpleGraph){
+          out << v << " [shape=ellipse" << " label=\"" << v << "\"];" << std::endl;
+      }
+
+
+      BGL_FORALL_EDGES(e, Graph, simpleGraph){
+          simpleVertex sourcestr = source(e, Graph);
+          simpleVertex targetstr = target(e, Graph);
+          out << sourcestr << " -- " <<  targetstr << ";" << std::endl;
+      }
+
+      out <<"}";
+      out.close();
+  }
+
+/**
+* Visualize a graph with the neato tool and write to file.
+*/
+static   void saveGraphToPNG(std::string filenamePath, const simpleGraph& Graph){
+    saveGraphToDot(filenamePath,Graph);
+    system(("neato -Tpng -Gcharset=latin1 " + filenamePath + " > " + filenamePath + ".png").c_str());
+}
+
 
     /**
   * Visualize a graph with the neato tool and write to file.

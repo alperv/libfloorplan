@@ -10,39 +10,26 @@ using namespace floorplan;
 int main(){
     GraphDatabase D;
     D.loadGraphs("corpus/");
-    //cout << "Replaced " << D.replaceCategory("RS LAB", "OFF") << " categories" << endl;
+    D.Init();
+    D.Save("corpus_processed.dat");
 
-    D.replaceCategory("LAB SV", "RS LAB");
-    D.replaceCategory("RS LO", "RS LAB");
-
-    D.replaceCategory("F LAV", "BATH");
-    D.replaceCategory("M LAV", "BATH");
-    D.replaceCategory("P LAV", "BATH");
-
-    D.replaceCategory("OFF SV", "OFF");
-
-   // D.RemoveIsolatedVertices();
-  //  D.RemoveDisconnectedGraphs();
-    D.removeCategoriesBasedonFrequency(500);
-
-    // GraphFileOperations::saveGraphToPNG("first.png", D.getGraphs()[0]);
-
-    floorplanGraph tmpgraph;
-    GraphUtils::removeCategory("LAB SV",D.getGraphs()[0],tmpgraph);
-    GraphFileOperations::saveGraphToPNG("second.png", tmpgraph);
-
-
-   // D.Load("small_corpus.dat");
-
-    cout << __FILE__ << ": " << __LINE__ << endl;
     GraphStatistics stat(&D);
-    cout << stat.getNumberOfGraphs() << endl;
-    cout << stat.getNumberOfVertices() << endl;
-    cout << stat.getNumberofCategories() << endl;
-    stat.generateAreaDist();
-    stat.generateDegreeDist();
-    stat.saveDistToFile("areadist.txt", stat.getAreaDist());
-    stat.saveDistToFile("degreedist.txt", stat.getDegreeDist());
+    stat.printGraphDatabaseStatistics();
+    stat.createFileAttributesList();
+    stat.createFilePairwiseCounts();
+    return 1;
 
+  //  stat.generateAreaDist();
+    stat.generateDegreeDistByLabel();
+    stat.generateCategoryCountDist();
+    stat.generateAverageGraphPathLengthDist();
+    stat.generateDegreeDistribution();
+   // stat.calculateAverageClusterCoeffient();
+    //stat.saveDistToFile("raw_areadist.txt", stat.getAreaDist());
+   // stat.saveDistToFile("tmp/raw_degreedist.txt", stat.getDegreeDist());
+   // stat.saveDistToFile("tmp/raw_categorycountdist.txt", stat.getCategoryCountDist());
+   // stat.saveDistToFile("tmp/raw_averagedegree.txt", stat.getAveragePathLength());
+   // stat.saveDistToFile("raw_degreedistribution.txt",stat.getDegreeDistribution());
+    cout << "cluster coeff " << stat.getAverageClusterCoefficient() << endl;
     return 0;
-};
+}

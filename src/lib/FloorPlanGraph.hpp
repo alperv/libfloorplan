@@ -10,6 +10,12 @@
 #include <boost/graph/clustering_coefficient.hpp>
 #include <boost/graph/exterior_property.hpp>
 
+#include <boost/property_map/property_map.hpp>
+
+#include <boost/graph/property_maps/container_property_map.hpp>
+#include <boost/graph/clustering_coefficient.hpp>
+#include <boost/graph/exterior_property.hpp>
+
 #ifndef FLOORPLANGRAPH_H
 #define FLOORPLANGRAPH_H
 
@@ -113,8 +119,8 @@ class graphProperties{
 public:
     graphProperties(){ maxx = -1; maxy=-1; minx=-1; miny=-1;}
 
-    std::string floorName;
-    std::string filePath;
+    std::string floorname;
+    std::string filepath;
     double maxx,maxy,minx,miny;
     Point2D centroid;
 
@@ -122,8 +128,8 @@ public:
         void serialize(Archive &ar, const unsigned int version)
         {
 
-            ar & floorName;
-            ar & filePath;
+            ar & floorname;
+            ar & filepath;
             ar & maxx;
             ar & maxy;
             ar & minx;
@@ -137,11 +143,20 @@ public:
   */
 //typedef boost::labeled_graph<boost::adjacency_list<boost::listS, boost::listS, boost::undirectedS, Space, spaceEdge, graphProperties>, std::string> floorplanGraph;
 typedef boost::adjacency_list<boost::listS, boost::listS, boost::undirectedS, Space, spaceEdge, graphProperties> floorplanGraph;
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS, boost::no_property, boost::property< boost::edge_weight_t, int> > simpleGraph;
 
 /**
   * Vertex and edge descriptors
   */
 typedef boost::graph_traits<floorplanGraph>::vertex_descriptor Vertex;
 typedef boost::graph_traits<floorplanGraph>::edge_descriptor Edge;
+typedef boost::graph_traits<simpleGraph>::vertex_descriptor simpleVertex;
+typedef boost::graph_traits<simpleGraph>::edge_descriptor simpleEdge;
+
+/// The clustering property, container, and map define the containment
+/// and abstract accessor for the clustering coefficients of vertices.
+typedef boost::exterior_vertex_property<simpleGraph, float> ClusteringProperty;
+typedef ClusteringProperty::container_type ClusteringContainer;
+typedef ClusteringProperty::map_type ClusteringMap;
 
 #endif // FLOORPLANGRAPH_H

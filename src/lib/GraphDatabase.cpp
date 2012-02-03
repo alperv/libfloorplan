@@ -24,7 +24,7 @@ GraphDatabase::GraphDatabase()
 
 //----------------------------------------------------------------
 void GraphDatabase::loadGraphs(string sDir, string rootNodeName, int iLimit, bool append){
-    if (append)
+    if (!append)
         _graphs = vector<floorplanGraph>();
     _graphProperties = GraphFileOperations::loadAllGraphsInFolder(sDir, _graphs, iLimit, rootNodeName);
 }
@@ -64,6 +64,7 @@ void GraphDatabase::Load(string sFilename)
 
 //----------------------------------------------------------------
 int GraphDatabase::replaceCategory(std::string oldCategory, std::string newCategory){
+    cout << "Replacing category: " << oldCategory << "for: " << newCategory << endl;
     int nodesAffected = 0;
     for (unsigned int i=0; i < _graphs.size(); i++){
         BGL_FORALL_VERTICES(v, _graphs[i], floorplanGraph){
@@ -90,6 +91,42 @@ int  GraphDatabase::mergeCentralNodes(int degreeThreshold, std::string newCatego
     return nodesAffected;
 }
 
+//----------------------------------------------------------------
+int  GraphDatabase::removeIsolatedVertices(){
+
+    for (unsigned int i=0; i < _graphs.size(); i++){
+        vector<string> verticesToRemove;
+        BGL_FORALL_VERTICES(v, _graphs[i], floorplanGraph){
+            if (in_degree(v, _graphs[i]) == 0){
+                verticesToRemove.push_back(_graphs[i][v].vertex_id);
+            }
+        }
+
+        for (unsigned int j=0; j < verticesToRemove.size(); j++){
+            floorplanGraph tmpGraph;
+            GraphUtils::removeVertex(GraphUtils::doesVertexExists(verticesToRemove[j], _graphs[i]).second, _graphs[i], tmpGraph);
+            _graphs[i] = tmpGraph;
+        }
+    }
+}
+
+//----------------------------------------------------------------
+int  GraphDatabase::removeGraphsSmallerThan(int sizeThreshold){
+    int graphsRemoved = 0;
+    vector<floorplanGraph>::iterator it = _graphs.begin();
+    int k = 0;
+    for (; it != _graphs.end(); ++it){
+        if(num_vertices(*it) < sizeThreshold){
+            _graphs.erase(it);
+            _graphProperties.erase(_graphProperties.begin()+k);
+            graphsRemoved++;
+            k++;
+        }
+    }
+    return graphsRemoved;
+}
+
+//----------------------------------------------------------------
 void GraphDatabase::removeCategoriesBasedonFrequency(int freqThreshold){
     map<string, int> categoryCount;
     vector<string> labels;
@@ -128,6 +165,27 @@ void GraphDatabase::removeCategoriesBasedonFrequency(int freqThreshold){
         }
     }
 
+}
+
+//----------------------------------------------------------------
+void GraphDatabase::Init(){
+    cout << "Preparing graph database" << endl;
+    replaceCategory("LAB SV", "RS LAB");
+    replaceCategory("RES LO", "RS LAB");
+
+    replaceCategory("F LAV", "BATH");
+    replaceCategory("M LAV", "BATH");
+    replaceCategory("P LAV", "BATH");
+
+    replaceCategory("OFF SV", "OFF");
+    replaceCategory("FOODSV", "FOOD");
+
+   // D.RemoveIsolatedVertices();
+  //  D.RemoveDisconnectedGraphs();
+    mergeCentralNodes(3, "CORR");
+    removeIsolatedVertices();
+    removeGraphsSmallerThan(5);
+    removeCategoriesBasedonFrequency(500);
 }
 
 }

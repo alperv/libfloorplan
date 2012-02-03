@@ -40,7 +40,7 @@ public:
     void loadGraphs(std::string sDir, std::string rootNodeName = "MITquest", int iLimit = -1, bool append = false);
 
     const std::vector<floorplanGraph>& getGraphs(){ return _graphs; }
-    const std::vector<graphProperties>& getGraphProperty(){ return _graphProperties; }
+    const std::vector<graphProperties>& getGraphProperties(){ return _graphProperties; }
 
 
     /**
@@ -57,6 +57,17 @@ public:
       * @return: number of spaces affected by this.
       */
    int replaceCategory(std::string oldCategory, std::string newCategory);
+
+   /**
+     * Remove graphs based on size, graphs smaller than @sizeThreshold will be removed
+     * @return: number of graphs removed
+     */
+   int removeGraphsSmallerThan(int sizeThreshold);
+
+   /**
+     * Remove vertices that do not have any edges
+     */
+   int removeIsolatedVertices();
 
 
    /**
@@ -86,6 +97,12 @@ public:
      * Loads all the loaded graphs in this graph database to disk-
     */
     void Load(std::string sFilename);
+
+    /**
+      * Filter and prepare graphs
+      */
+    void Init();
+
 
 };
 

@@ -8,7 +8,13 @@ You will need Boost Graph Library > 1.42 or equivalent
 WORKS:
 - Loading and saving graphs from XML, boost::serialization
 - Area and degree distributions can be generated & saved to file
-
+- Filtering based on size, frequency, connectivity etc.
+- Graph statistics:
+* Clustering coefficient
+* Degree distribution
+* Characteristic path length
+* Pairwise counts
+* Computing vertex-wise attributes
 TODO:
 Regarding geometric properties, the polygon layout of a room:
 - Shape (simply square or elongated)

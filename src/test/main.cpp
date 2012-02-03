@@ -9,10 +9,11 @@ using namespace floorplan;
 
 int main(){
     GraphDatabase D;
-    D.loadGraphs("corpus/");
-    D.Init();
-    D.Save("corpus_processed.dat");
+   // D.loadGraphs("corpus/");
+   // D.Init();
+   // D.Save("corpus_processed.dat");
 
+    D.Load("corpus_processed.dat");
     GraphStatistics stat(&D);
     stat.printGraphDatabaseStatistics();
     stat.createFileAttributesList();

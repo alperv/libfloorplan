@@ -12,4 +12,4 @@ SET(CMAKE_BINARY_DIR ${OUTPUT})
 
 add_subdirectory(./src/lib)
 add_subdirectory(./src/test)
-
+add_subdirectory(./src/genmatlab)

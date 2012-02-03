@@ -46,10 +46,10 @@ int main(){
     cout << stat.getNumberofCategories() << endl;
 
     stat.generateAreaDist();
-    stat.generateDegreeDist();
+    stat.generateDegreeDistribution();
 
     stat.saveDistToFile("areadist.txt", stat.getAreaDist());
-    stat.saveDistToFile("degreedist.txt", stat.getDegreeDist());
+    stat.saveDistToFile("degreedist.txt", stat.getDegreeDistribution());
 
 
     std::vector<floorplanGraph> graphs =  D.getGraphs();

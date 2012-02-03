@@ -285,12 +285,16 @@ void  GraphStatistics::createFileAttributesList(){
 }
 
 bool GraphStatistics::isStringPairEqual(std::pair<std::string, std::string> p1, std::pair<std::string, std::string> p2){
-    if ( (p1.first.compare(p2.first) == 0 && p1.second.compare(p2.second)) ||
-         (p1.first.compare(p2.second) == 0 && p1.second.compare(p2.first)) ){
+  // cout << "Comparing " << p1.first <<" " << p1.second << " and " << p2.first << " " << p2.second << endl;
+    if ( (p1.first.compare(p2.first) == 0 && p1.second.compare(p2.second) == 0) ||
+         (p1.first.compare(p2.second) == 0 && p1.second.compare(p2.first) == 0) ){
+    //    cout << "same!" << endl;
         return true;
+
     }
     else{
         return false;
+
     }
 }
 
@@ -344,13 +348,22 @@ void  GraphStatistics::createFilePairwiseCounts(){
         for (unsigned int j=0; j< _labels.size(); j++){
             pair<string, string> catPair(_labels[i], _labels[j]);
             CategoryPairToIntMap::iterator it = _pairwiseCount.begin();
+            bool isFound = false;
             for (;it!=_pairwiseCount.end();++it){
                 if (isStringPairEqual(catPair, it->first)){
-                    out << " " << it->second;
+                    isFound = true;
+                    if (j == _labels.size()-1)
+                    out << it->second;
+                    else
+                         out << it->second << ",";
+                    break;
                 }
             }
+            assert(isFound);
         }
+        out << endl;
     }
+    out.close();
 }
 
 

@@ -115,14 +115,16 @@ int  GraphDatabase::removeGraphsSmallerThan(int sizeThreshold){
     int graphsRemoved = 0;
     vector<floorplanGraph>::iterator it = _graphs.begin();
     int k = 0;
-    for (; it != _graphs.end(); ++it){
+    cout << "  looping graphs\n";
+    /*for (; it != _graphs.end(); ++it){
+      cout << ".";
         if(num_vertices(*it) < sizeThreshold){
             _graphs.erase(it);
             _graphProperties.erase(_graphProperties.begin()+k);
             graphsRemoved++;
             k++;
         }
-    }
+	}*/
     return graphsRemoved;
 }
 
@@ -182,9 +184,13 @@ void GraphDatabase::Init(){
 
    // D.RemoveIsolatedVertices();
   //  D.RemoveDisconnectedGraphs();
+    cout << "Merging nodes\n";
     mergeCentralNodes(3, "CORR");
+    cout << "Removing isolated\n";
     removeIsolatedVertices();
+    cout << "Removing small graphs\n";
     removeGraphsSmallerThan(5);
+    cout << "Remove low frequence categories\n";
     removeCategoriesBasedonFrequency(500);
 }
 

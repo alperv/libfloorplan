@@ -9,13 +9,13 @@
 using namespace std;
 using namespace floorplan;
 
-void saveGraphToMatlab(std::string filenamePath, const floorplanGraph& Graph);
-
 int main(){
     GraphDatabase D;
-    D.loadGraphs("/home/gandalf/nbergst/Dropbox/MITData/maps.csail.mit.edu/corpus");
+    D.loadGraphs("corpus");
     D.Init();
-
+    //D.Save("corpus_processed.dat");
+    
+    //D.Load("corpus_processed.dat");
     GraphStatistics stat(&D);
     stat.printGraphDatabaseStatistics();
     stat.generateAreaDist();
@@ -37,9 +37,8 @@ int main(){
       name += n;
       name += ".txt";
 
-      cout << "Saving " << name << std::endl;
+      //cout << "Saving " << name << std::endl;
       
-      //saveGraphToMatlab(std::string filenamePath, const floorplanGraph& Graph);
       GraphFileOperations::saveGraphToMatlab(name, graphs[i]);
 
     }

@@ -298,7 +298,7 @@ public:
             int sourceid; //= source(e, Graph);
             string targetstr = formatStringForDot(Graph[target(e, Graph)].vertex_id);
             int targetid; // = target(e, Graph);
-            out << sourceid << " " <<  targetid << std::endl;
+            out << sourcestr << " " << targetstr  << std::endl;
         }
         out.close();
     }

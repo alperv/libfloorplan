@@ -162,11 +162,11 @@ void GraphStatistics::saveDistToFile(string filename, DistVectorByLabel dist){
     DistVectorByLabel::iterator it = dist.begin();
 
     for (; it != dist.end(); ++it){
-        out << it->first << ", ";
-        for (unsigned int i = 0; i < it->second.size(); i++){
-            out << it->second[i] << " ";
-        }
-        out << endl;
+      out << it->first << ",";
+      for (unsigned int i = 0; i < it->second.size(); i++){
+	out << it->second[i] << ",";
+      }
+      out << endl;
     }
     out.close();
 }
@@ -274,10 +274,19 @@ void GraphStatistics::calculateAverageClusterCoeffient()//ExportClusterCoeffDist
 void  GraphStatistics::createFileAttributesList(){
 
     for(int i=0; i < _database->getGraphs().size(); i++)
-    {    string attFilename = _database->getGraphProperties()[i].filepath + "_attributes.txt";
+    {
+      char n[6];
+      sprintf(n,"%05d\0",i);
+      string attFilename = "matlab/floorplan_attributes_";
+      attFilename += n;
+      attFilename += ".txt";
+//_database->getGraphProperties()[i].filepath + "_attributes.txt";
          ofstream out(attFilename.c_str() );
          BGL_FORALL_VERTICES(v, _database->getGraphs()[i], floorplanGraph ){
-             out << _database->getGraphs()[i][v].vertex_id << ","<< in_degree(v, _database->getGraphs()[i]) << "," << getArea(_database->getGraphs()[i][v]) << endl;
+	   out << _database->getGraphs()[i][v].vertex_id << " "
+	       << in_degree(v, _database->getGraphs()[i]) << " "
+	       << getArea(_database->getGraphs()[i][v]) << " "
+	       << _database->getGraphs()[i][v].category << endl;
          }
          out.close();
     }

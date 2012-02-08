@@ -272,7 +272,7 @@ void GraphStatistics::calculateAverageClusterCoeffient()//ExportClusterCoeffDist
 
 //----------------------------------------------------------------
 void  GraphStatistics::createFileAttributesList(){
-
+    cout <<"Writing attribute files in the same directory as the graph files" << endl;
     for(int i=0; i < _database->getGraphs().size(); i++)
     {    string attFilename = _database->getGraphProperties()[i].filepath + "_attributes.txt";
          ofstream out(attFilename.c_str() );
@@ -343,6 +343,7 @@ void  GraphStatistics::createFilePairwiseCounts(){
         cout << it->first.first << ", " << it->first.second << ": " << it->second << endl;
     }
 
+    cout <<" Saving file: ./pairwise_counts.txt" << endl;
     ofstream out("pairwise_counts.txt");
     for (unsigned int i =0; i < _labels.size(); i++){
         for (unsigned int j=0; j< _labels.size(); j++){

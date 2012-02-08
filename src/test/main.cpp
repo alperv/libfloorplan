@@ -9,16 +9,26 @@ using namespace floorplan;
 
 int main(){
     GraphDatabase D;
-   // D.loadGraphs("corpus/");
-   // D.Init();
-   // D.Save("corpus_processed.dat");
+    D.Load("corpus_raw.dat");
 
-    D.Load("corpus_processed.dat");
-    GraphStatistics stat(&D);
-    stat.printGraphDatabaseStatistics();
-    stat.createFileAttributesList();
-    stat.createFilePairwiseCounts();
+ GraphStatistics stat1(&D);
+ stat1.printGraphDatabaseStatistics();
+ stat1.generateCategoryCountDist();
+ stat1.saveDistToFile("raw_categorycountdist.txt", stat1.getCategoryCountDist());
+
+ D.Init();
+ GraphStatistics stat2(&D);
+ stat2.printGraphDatabaseStatistics();
     return 1;
+
+//    D.Load("corpus_processed.dat");
+    D.Load("corpus_raw.dat");
+
+    GraphStatistics stat(&D);
+//    stat.printGraphDatabaseStatistics();
+//    stat.createFileAttributesList();
+//    stat.createFilePairwiseCounts();
+//    return 1;
 
   //  stat.generateAreaDist();
     stat.generateDegreeDistByLabel();
@@ -28,7 +38,7 @@ int main(){
    // stat.calculateAverageClusterCoeffient();
     //stat.saveDistToFile("raw_areadist.txt", stat.getAreaDist());
    // stat.saveDistToFile("tmp/raw_degreedist.txt", stat.getDegreeDist());
-   // stat.saveDistToFile("tmp/raw_categorycountdist.txt", stat.getCategoryCountDist());
+    stat.saveDistToFile("raw_MIT_categorycountdist.txt", stat.getCategoryCountDist());
    // stat.saveDistToFile("tmp/raw_averagedegree.txt", stat.getAveragePathLength());
    // stat.saveDistToFile("raw_degreedistribution.txt",stat.getDegreeDistribution());
     cout << "cluster coeff " << stat.getAverageClusterCoefficient() << endl;

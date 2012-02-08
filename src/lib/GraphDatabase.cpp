@@ -152,18 +152,30 @@ void GraphDatabase::removeCategoriesBasedonFrequency(int freqThreshold){
     vector<string> categoriesToRemove;
     map<string, int>::iterator it;
     for (it = categoryCount.begin(); it != categoryCount.end(); ++it){
-        if (it->second < freqThreshold)
+        if (it->second < freqThreshold){
+            cout << "Category: " << it->first << "has: " << it->second <<endl;
             categoriesToRemove.push_back(it->first);
+        }
     }
 
     // Remove those categories from each graph in the database
+    vector<int> indicesToBeRemoved;
     for (unsigned int i =0; i < categoriesToRemove.size(); i++){
         cout << "Removing category " << categoriesToRemove[i] << endl;
         for (unsigned int j = 0; j < _graphs.size(); j++){
             floorplanGraph tmpGraph = _graphs[j];
-            GraphUtils::removeCategory(categoriesToRemove[i],tmpGraph, _graphs[j]);
+           bool toremove= GraphUtils::removeCategory(categoriesToRemove[i],tmpGraph, _graphs[j]);
+           if(toremove){
+               indicesToBeRemoved.push_back(j);
+           }
+
         }
     }
+
+//    for (unsigned int i =0; i < indicesToBeRemoved.size(); i++){
+//        _graphs.erase(_graphs.begin()+indicesToBeRemoved[i]);
+//        _graphProperties.erase(_graphProperties.begin()+indicesToBeRemoved[i]);
+//    }
 
 }
 
@@ -172,6 +184,7 @@ void GraphDatabase::Init(){
     cout << "Preparing graph database" << endl;
     replaceCategory("LAB SV", "RS LAB");
     replaceCategory("RES LO", "RS LAB");
+    replaceCategory("LAB", "RS LAB");
 
     replaceCategory("F LAV", "BATH");
     replaceCategory("M LAV", "BATH");
@@ -180,12 +193,14 @@ void GraphDatabase::Init(){
     replaceCategory("OFF SV", "OFF");
     replaceCategory("FOODSV", "FOOD");
 
-   // D.RemoveIsolatedVertices();
-  //  D.RemoveDisconnectedGraphs();
+    replaceCategory("P CIRC", "CORR");
+
+    replaceCategory("CLA SV", "CLASS");
+
+
     mergeCentralNodes(3, "CORR");
-    removeIsolatedVertices();
     removeGraphsSmallerThan(5);
-    removeCategoriesBasedonFrequency(500);
+    removeCategoriesBasedonFrequency(100);
 }
 
 }

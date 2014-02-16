@@ -1,6 +1,6 @@
 LibFloorplan
 
-Parsing of and classifying from large floorplan datasets
+Topological parsing and classifying of large floorplan datasets
 
 INSTALLATION
 You will need Boost Graph Library > 1.42 or equivalent

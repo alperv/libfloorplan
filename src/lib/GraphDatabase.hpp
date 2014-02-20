@@ -37,7 +37,7 @@ public:
     /**
       * Load dataset from a directory
       */
-    void loadGraphs(std::string sDir, std::string rootNodeName = "MITquest", int iLimit = -1, bool append = false);
+    void loadGraphs(std::string sDir, std::string rootNodeName, int iLimit = -1, bool append = false);
 
     const std::vector<floorplanGraph>& getGraphs(){ return _graphs; }
     const std::vector<graphProperties>& getGraphProperties(){ return _graphProperties; }
@@ -102,8 +102,6 @@ public:
       * Filter and prepare graphs
       */
     void Init();
-
-
 };
 
 }

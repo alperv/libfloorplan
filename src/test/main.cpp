@@ -8,8 +8,15 @@ using namespace std;
 using namespace floorplan;
 
 int main(){
-    GraphDatabase D;
-    D.Load("corpus_raw.dat");
+ GraphDatabase D;
+
+ // Use "floor" for the KTH dataset
+ // and "MITquest" for the MIT dataset
+ // Load the KTH dataset
+ D.loadGraphs("kth_dataset", "floor");
+
+ // Load the MIT dataset
+ D.loadGraphs("maps.csail.mit.edu", "MITquest");
 
  GraphStatistics stat1(&D);
  stat1.printGraphDatabaseStatistics();

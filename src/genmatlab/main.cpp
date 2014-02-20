@@ -13,7 +13,7 @@ void saveGraphToMatlab(std::string filenamePath, const floorplanGraph& Graph);
 
 int main(){
     GraphDatabase D;
-    D.loadGraphs("/home/gandalf/nbergst/Dropbox/MITData/maps.csail.mit.edu/corpus");
+    D.loadGraphs("/home/gandalf/nbergst/Dropbox/MITData/maps.csail.mit.edu/corpus", "MITquest");
     D.Init();
 
     GraphStatistics stat(&D);

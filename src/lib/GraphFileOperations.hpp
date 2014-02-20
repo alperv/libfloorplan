@@ -79,7 +79,7 @@ public:
     /**
   * Load a graph from XML file. Both MIT and KTH formats are supported.
   */
-   static graphProperties loadGraphFromXML(std::string filenamePath, floorplanGraph& outGraph, std::string rootNodeName = "MITquest"){
+   static graphProperties loadGraphFromXML(std::string filenamePath, floorplanGraph& outGraph, std::string rootNodeName){
         ptree XMLtree;
         read_xml(filenamePath, XMLtree);
         map<string, Vertex> nameToVertex;
@@ -215,10 +215,10 @@ public:
 
 
 
-    /**
+  /**
   * Load all graphs in a folder
   */
- static   std::vector<graphProperties> loadAllGraphsInFolder(string sDir, vector<floorplanGraph>& vResult, int iLimit = -1, std::string rootNodeName  = "MITquest")
+ static   std::vector<graphProperties> loadAllGraphsInFolder(string sDir, vector<floorplanGraph>& vResult, std::string rootNodeName, int iLimit = -1)
     {
         DIR *dp;
         stringstream fLoad;
@@ -253,16 +253,21 @@ public:
                 {
                     cout << "Loading file " << fLoad.str() << endl;
                     floorplanGraph Graph;
-                    graphProperties props = loadGraphFromXML(string(fLoad.str()), Graph, rootNodeName);
-                    retGraphProperties.push_back(props);
-                    vResult.push_back(Graph);
-                    fLoad.str("");
-                }
+                    try {
+                      graphProperties props = loadGraphFromXML(string(fLoad.str()), Graph, rootNodeName);
+                      retGraphProperties.push_back(props);
+                      vResult.push_back(Graph);
+                      fLoad.str("");
+                     }
+                    catch( const boost::exception& E) {
+                      cerr << "Could not load " << fLoad.str() << endl; 
+                    }
+               }
                 else
                 {
                     if(S_ISDIR(statTmp.st_mode)){
                         cout << "Loading directory " << fLoad.str() << endl;
-                        vector<graphProperties> tmp = loadAllGraphsInFolder(string(fLoad.str()), vResult, iLimit, rootNodeName);
+                        vector<graphProperties> tmp = loadAllGraphsInFolder(string(fLoad.str()), vResult, rootNodeName, iLimit);
                         retGraphProperties.insert(retGraphProperties.end(),tmp.begin(),tmp.end());
                     }
                     fLoad.str("");

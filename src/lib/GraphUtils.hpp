@@ -92,21 +92,23 @@ public:
     }
 
     //----------------------------------------------------------------
-    static void removeCategory(std::string categoryToRemove, const floorplanGraph& oldGraph, floorplanGraph& outGraph){
+    static bool removeCategory(std::string categoryToRemove, const floorplanGraph& oldGraph, floorplanGraph& outGraph){
         vector<string> verticesToRemove;
         BGL_FORALL_VERTICES(v, oldGraph, floorplanGraph){
             if (oldGraph[v].category.compare(categoryToRemove) == 0){
                 verticesToRemove.push_back(oldGraph[v].vertex_id);
             }
         }
-
+        if (verticesToRemove.empty()) {
+          return false;
+        }
         outGraph = oldGraph;
         for (unsigned int i=0; i < verticesToRemove.size(); i++){
             floorplanGraph tmpGraph;
             removeVertex(doesVertexExists(verticesToRemove[i], outGraph).second, outGraph, tmpGraph);
             outGraph = tmpGraph;
         }
-
+        return true;
     }
 
     //----------------------------------------------------------------

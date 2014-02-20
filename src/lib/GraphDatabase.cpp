@@ -26,7 +26,7 @@ GraphDatabase::GraphDatabase()
 void GraphDatabase::loadGraphs(string sDir, string rootNodeName, int iLimit, bool append){
     if (!append)
         _graphs = vector<floorplanGraph>();
-    _graphProperties = GraphFileOperations::loadAllGraphsInFolder(sDir, _graphs, iLimit, rootNodeName);
+    _graphProperties = GraphFileOperations::loadAllGraphsInFolder(sDir, _graphs, rootNodeName, iLimit);
 }
 
 
